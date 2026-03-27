@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydration Automation — Siddhi Kabadi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#F2EBE1; --warm:#FAF7F4; --ink:#1C1208; --ink-light:#3D2B1F;
+      --rust:#C00404; --gold:#A67C52; --sage:#8C7B72; --border:#D9C9BC; --border-l:#EDE3DA;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--warm);color:var(--ink);font-family:'Lora',Georgia,serif;line-height:1.75;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(250,248,244,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:100;}
+    .nav-name{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-light);}
+    .nav-tabs{display:flex;height:100%;}
+    .nav-tab{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:0 1.3rem;height:100%;display:flex;align-items:center;gap:0.5rem;cursor:pointer;color:var(--ink-light);border-bottom:2px solid transparent;transition:all 0.2s;border-top:none;border-left:none;border-right:none;background:none;}
+    .nav-tab:hover{color:var(--rust);}
+    .nav-tab.active{color:var(--rust);border-bottom-color:var(--rust);}
+    .tab-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:none;}
+    .poster-tab .tab-dot{display:block;}
+    .nav-links-left{display:flex;gap:0;}
+    .nav-link-back{font-family:'DM Mono',monospace;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0 1rem;height:60px;display:flex;align-items:center;color:var(--sage);text-decoration:none;transition:all 0.2s;}
+    .nav-link-back:hover{color:var(--rust);}
+
+    /* PANELS */
+    .panel{display:none;animation:fadeIn 0.35s ease;}
+    .panel.active{display:block;}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:9rem 3rem 5rem;max-width:920px;margin:0 auto;position:relative;}
+    .hero-rule{position:absolute;right:0;top:15%;width:1px;height:60%;background:linear-gradient(to bottom,transparent,var(--border),transparent);}
+    .eyebrow{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:2rem;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;}
+    .hero h1{font-size:clamp(2.3rem,5vw,3.9rem);font-weight:600;line-height:1.18;color:var(--ink);margin-bottom:1.75rem;opacity:0;animation:fadeUp 0.7s ease 0.35s forwards;}
+    .hero h1 em{font-style:italic;color:var(--rust);}
+    .meta-strip{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--border);width:fit-content;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.7s ease 0.5s forwards;}
+    .meta-item{padding:0.65rem 1.4rem;border-right:1px solid var(--border);}
+    .meta-item:last-child{border-right:none;}
+    .meta-k{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);display:block;margin-bottom:0.15rem;}
+    .meta-v{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--ink);}
+    .hero-desc{font-size:1.08rem;color:var(--ink-light);max-width:600px;line-height:1.82;opacity:0;animation:fadeUp 0.7s ease 0.65s forwards;}
+    .hero-cta{margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s ease 0.8s forwards;}
+
+    /* POSTER TEASER */
+    .poster-teaser{margin-top:2.5rem;padding:1.5rem 1.75rem;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;gap:1.75rem;cursor:pointer;transition:border-color 0.2s;opacity:0;animation:fadeUp 0.7s ease 1s forwards;max-width:580px;}
+    .poster-teaser:hover{border-color:var(--gold);}
+    .poster-thumb{width:52px;height:68px;background:var(--border-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .poster-thumb svg{width:24px;height:24px;opacity:0.35;}
+    .poster-teaser-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.25rem;}
+    .poster-teaser-title{font-size:0.95rem;font-weight:600;color:var(--ink);margin-bottom:0.15rem;}
+    .poster-teaser-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--sage);}
+    .poster-teaser-arrow{margin-left:auto;font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--gold);flex-shrink:0;}
+
+    /* MAIN */
+    main{max-width:920px;margin:0 auto;padding:0 3rem 7rem;}
+    section{margin-bottom:5rem;}
+    .sec-head{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+    .sec-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--rust);letter-spacing:0.1em;}
+    h2{font-size:1.5rem;font-weight:600;color:var(--ink);}
+    p{color:var(--ink-light);margin-bottom:1.2rem;font-size:1rem;}
+    p:last-child{margin-bottom:0;}
+    p strong{color:var(--ink);}
+
+    /* TECH */
+    .tech-grid{display:flex;flex-wrap:wrap;gap:0.55rem;}
+    .tech-pill{font-family:'DM Mono',monospace;font-size:0.7rem;padding:0.38rem 0.9rem;border:1px solid var(--border);color:var(--ink-light);transition:all 0.2s;cursor:default;}
+    .tech-pill:hover{border-color:var(--rust);color:var(--rust);}
+
+    /* ARCH */
+    .arch{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;background:var(--cream);border:1px solid var(--border);padding:2.5rem 1.5rem;margin:1.5rem 0;}
+    .arch-node{text-align:center;padding:1rem 0.5rem;}
+    .arch-icon{font-size:1.75rem;display:block;margin-bottom:0.6rem;}
+    .arch-t{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);display:block;margin-bottom:0.35rem;}
+    .arch-d{font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--sage);line-height:1.6;}
+    .arch-arrow{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--border);padding:0 0.5rem;}
+
+    /* SPEC TABLE */
+    .spec-table{border:1px solid var(--border);}
+    .spec-row{display:grid;grid-template-columns:220px 1fr;border-bottom:1px solid var(--border);}
+    .spec-row:last-child{border-bottom:none;}
+    .spec-k{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--rust);padding:1rem 1.25rem;background:var(--cream);border-right:1px solid var(--border);display:flex;align-items:center;letter-spacing:0.04em;}
+    .spec-v{font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--ink-light);padding:1rem 1.25rem;display:flex;align-items:center;line-height:1.55;}
+
+    /* OUTCOMES */
+    .outcomes{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border-l);border:1px solid var(--border);margin-bottom:1.5rem;}
+    .outcome{background:var(--warm);padding:1.75rem;position:relative;}
+    .outcome::before{content:'';position:absolute;top:0;left:0;width:100%;height:2px;background:linear-gradient(to right,var(--rust),transparent);}
+    .outcome-icon{font-size:1.5rem;display:block;margin-bottom:0.65rem;}
+    .outcome h3{font-size:0.95rem;font-weight:600;color:var(--ink);margin-bottom:0.35rem;}
+    .outcome p{font-size:0.88rem;color:var(--ink-light);margin:0;}
+
+    /* STEPS */
+    .steps{display:flex;gap:1px;background:var(--border-l);border:1px solid var(--border);}
+    .step{flex:1;background:var(--warm);padding:1.5rem 1.25rem;text-align:center;}
+    .step-n{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--sage);display:block;margin-bottom:0.4rem;letter-spacing:0.1em;}
+    .step h3{font-size:0.9rem;font-weight:600;color:var(--rust);margin-bottom:0.3rem;}
+    .step p{font-family:'DM Mono',monospace;font-size:0.63rem;color:var(--sage);margin:0;}
+
+    /* TEAM */
+    .team-row{display:flex;gap:0.75rem;flex-wrap:wrap;}
+    .team-chip{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--ink-light);padding:0.55rem 1.2rem;border:1px solid var(--border);display:flex;align-items:center;gap:0.5rem;}
+    .team-chip.you{border-color:var(--rust);color:var(--rust);background:rgba(192,4,4,0.04);}
+
+    /* PULLQUOTE */
+    .pullquote{border-left:3px solid var(--gold);padding:1.2rem 1.75rem;background:rgba(166,124,82,0.05);font-style:italic;color:var(--ink);font-size:1.05rem;margin:2rem 0;}
+
+    /* RESULT CARDS */
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem;}
+    .result-card{background:var(--cream);border:1px solid var(--border);padding:1.75rem;position:relative;}
+    .result-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--rust);}
+    .result-card h3{font-size:1rem;font-weight:600;color:var(--ink);margin-bottom:0.5rem;}
+
+    /* BTNS */
+    .btn{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;padding:0.85rem 1.6rem;border:1px solid var(--ink);color:var(--ink);transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;background:none;}
+    .btn:hover{background:var(--ink);color:var(--warm);}
+    .btn.primary{background:var(--rust);border-color:var(--rust);color:white;}
+    .btn.primary:hover{background:#A00303;border-color:#A00303;}
+    .btn.gold{border-color:var(--gold);color:var(--gold);}
+    .btn.gold:hover{background:var(--gold);color:white;}
+    .btns{display:flex;gap:1rem;flex-wrap:wrap;}
+
+    /* POSTER PANEL */
+    .poster-panel-hero{padding:9rem 3rem 4rem;max-width:920px;margin:0 auto;}
+    .poster-panel-hero h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:600;line-height:1.2;color:var(--ink);margin-bottom:1rem;}
+    .poster-panel-hero h1 em{font-style:italic;color:var(--gold);}
+    .poster-panel-hero p{color:var(--ink-light);max-width:580px;margin-bottom:2rem;}
+    .poster-download-row{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:3rem;}
+    .poster-viewer{max-width:920px;margin:0 auto;padding:0 3rem 7rem;}
+    .poster-frame-wrap{border:1px solid var(--border);background:var(--cream);}
+    .poster-frame-label{padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .poster-frame-label span{font-family:'DM Mono',monospace;font-size:0.63rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--sage);}
+    .poster-frame-label .pfl-r{color:var(--rust);}
+    .poster-embed{width:100%;height:85vh;border:none;display:block;}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:2rem 3rem;max-width:920px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+    .f-left{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--border);letter-spacing:0.08em;}
+    .f-right{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--ink-light);}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+    @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+    @media(max-width:680px){
+      nav{padding:0 1.25rem;}
+      .hero,main,.poster-panel-hero,.poster-viewer,footer{padding-left:1.5rem;padding-right:1.5rem;}
+      .arch{grid-template-columns:1fr;}
+      .outcomes{grid-template-columns:1fr;}
+      .steps{flex-direction:column;}
+      .spec-row{grid-template-columns:1fr;}
+      .spec-k{border-right:none;border-bottom:1px solid var(--border);}
+      .poster-teaser{flex-wrap:wrap;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Siddhi Kabadi</span>
+  <div style="display:flex;height:100%;align-items:center;">
+    <div class="nav-links-left">
+      <a class="nav-link-back" href="./index.html">About</a>
+      <a class="nav-link-back" href="./passwordsindex.html">ML ↗</a>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPanel('overview',this)">Overview</button>
+      <button class="nav-tab poster-tab" onclick="showPanel('poster',this)"><span class="tab-dot"></span>Research Poster</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ OVERVIEW PANEL ═══ -->
+<div id="panel-overview" class="panel active">
+  <div class="hero">
+    <div class="hero-rule"></div>
+    <p class="eyebrow">Santa Clara University · Capstone · MIT IEEE URTC 2025</p>
+    <h1>Hydration Automation —<br><em>Smart Irrigation</em><br>for Community Farms</h1>
+    <div class="meta-strip">
+      <div class="meta-item"><span class="meta-k">Advisor</span><span class="meta-v">Navid Shaghaghi</span></div>
+      <div class="meta-item"><span class="meta-k">Co-Advisor</span><span class="meta-v">Allan Báez Morales</span></div>
+      <div class="meta-item"><span class="meta-k">Partner</span><span class="meta-v">Veggielution Farm</span></div>
+      <div class="meta-item"><span class="meta-k">Venue</span><span class="meta-v">MIT IEEE URTC 2025</span></div>
+    </div>
+    <p class="hero-desc">A low-cost, solar-powered IoT irrigation system for small community farms: combining soil moisture sensing, LoRa radio, and a real-time web dashboard to automate water management sustainably.</p>
+    <div class="hero-cta">
+      <button class="btn primary" onclick="showPanel('poster',document.querySelectorAll('.nav-tab')[1])">View Research Poster ↗</button>
+    </div>
+    <div class="poster-teaser" onclick="showPanel('poster',document.querySelectorAll('.nav-tab')[1])">
+      <div class="poster-thumb">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="7" y1="8" x2="17" y2="8"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="13" y2="16"/></svg>
+      </div>
+      <div>
+        <div class="poster-teaser-label">✦ Featured</div>
+        <div class="poster-teaser-title">Read the Research Poster</div>
+        <div class="poster-teaser-sub">MIT IEEE URTC 2025 · Frugal InnovationHub</div>
+      </div>
+      <span class="poster-teaser-arrow">→</span>
+    </div>
+  </div>
+
+  <main>
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">01</span><h2>The Problem</h2></div>
+      <p>Climate change and inefficient irrigation continue to strain water resources globally. Small community farms (often operating on small budgets) face severe challenges. While smart irrigation solutions exist, they are typically <strong>unaffordable for nonprofits and community organizations.</strong></p>
+      <div class="pullquote">"Data-driven farming made simple: empowering urban farming initiatives."</div>
+      <p>Deployed at <strong>Veggielution</strong>, a 6-acre urban farm in San Jose promoting youth education and fresh produce distribution to underserved communities.</p>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">02</span><h2>System Architecture</h2></div>
+      <div class="arch">
+        <div class="arch-node">
+          <span class="arch-icon">🌾</span>
+          <span class="arch-t">Sensing Unit</span>
+          <span class="arch-d">4× Soil Moisture Probes<br>Solar + Battery<br>3D-Printed PETG</span>
+        </div>
+        <div class="arch-arrow">→ LoRa →</div>
+        <div class="arch-node">
+          <span class="arch-icon">📡</span>
+          <span class="arch-t">Base Station</span>
+          <span class="arch-d">Adafruit Feather M0<br>LoRa Radio Module<br>Wi-Fi Forwarding</span>
+        </div>
+        <div class="arch-arrow">→ WPA2 →</div>
+        <div class="arch-node">
+          <span class="arch-icon">📊</span>
+          <span class="arch-t">Web Dashboard</span>
+          <span class="arch-d">Next.js + React<br>Mapbox + Chartus<br>MongoDB + Express</span>
+        </div>
+      </div>
+      <p>Sensing units transmit soil moisture readings over LoRa to the base station, which forwards encrypted data via WPA2 to backend servers. The dashboard displays real-time readings and triggers automated valve activation when moisture drops below set thresholds.</p>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">03</span><h2>Tech Stack</h2></div>
+      <div class="tech-grid">
+        <span class="tech-pill">Next.js</span><span class="tech-pill">React</span><span class="tech-pill">TypeScript</span>
+        <span class="tech-pill">Mapbox</span><span class="tech-pill">Chartus</span><span class="tech-pill">Express.js</span>
+        <span class="tech-pill">MongoDB</span><span class="tech-pill">LoRa Radio</span>
+        <span class="tech-pill">Adafruit Feather M0</span><span class="tech-pill">PETG 3D Printing</span>
+        <span class="tech-pill">Solar Power System</span><span class="tech-pill">WPA2 Encryption</span>
+        <span class="tech-pill">EACP Protocol</span>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">04</span><h2>Hardware Features</h2></div>
+      <div class="spec-table">
+        <div class="spec-row"><span class="spec-k">Soil Moisture Probes</span><span class="spec-v">4 probes per sensing unit for cross-validation, ensuring accuracy across varied soil conditions</span></div>
+        <div class="spec-row"><span class="spec-k">Power System</span><span class="spec-v">Rechargeable batteries charged via integrated solar panels — continuous off-grid operation</span></div>
+        <div class="spec-row"><span class="spec-k">Enclosure</span><span class="spec-v">3D-printed PETG casing with UV resistance, venting features, and custom gaskets for all weather</span></div>
+        <div class="spec-row"><span class="spec-k">LoRa Modules</span><span class="spec-v">Long-range, low-bandwidth communication across multiple acres while minimizing power draw</span></div>
+        <div class="spec-row"><span class="spec-k">EACP Protocol</span><span class="spec-v">Custom Energy-Aware Communication Protocol — dynamically adjusts transmission frequency based on battery charge</span></div>
+        <div class="spec-row"><span class="spec-k">Security</span><span class="spec-v">WPA2 encryption for all data transmission to backend servers, protecting against packet loss and tampering</span></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">05</span><h2>Expected Outcomes</h2></div>
+      <div class="outcomes">
+        <div class="outcome"><span class="outcome-icon">💧</span><h3>Efficient Water Management</h3><p>Automated threshold-based irrigation reduces waste from manual or timer-based systems</p></div>
+        <div class="outcome"><span class="outcome-icon">📈</span><h3>Data-Driven Insights</h3><p>Real-time dashboards expose moisture trends for smarter long-term farm decisions</p></div>
+        <div class="outcome"><span class="outcome-icon">💰</span><h3>Cost Savings</h3><p>Solar-powered, low-cost hardware makes precision agriculture accessible to nonprofits</p></div>
+        <div class="outcome"><span class="outcome-icon">🤖</span><h3>Automation &amp; Labor Reduction</h3><p>Removes manual irrigation tasks, freeing staff for education and community programs</p></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">06</span><h2>Next Steps</h2></div>
+      <div class="steps">
+        <div class="step"><span class="step-n">01</span><h3>Optimize Hardware</h3><p>Compact integration of sensing units</p></div>
+        <div class="step"><span class="step-n">02</span><h3>Predictive Analytics</h3><p>ML-based moisture forecasting</p></div>
+        <div class="step"><span class="step-n">03</span><h3>Field Expansion</h3><p>Scale to full 6-acre deployment at Veggielution</p></div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">07</span><h2>Team</h2></div>
+      <div class="team-row">
+        <div class="team-chip you">✦ Siddhi Kabadi</div>
+        <div class="team-chip">Arnav Bharadwaj</div>
+        <div class="team-chip">Hayoung Ryow</div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-head"><span class="sec-num">08</span><h2>Links</h2></div>
+      <div class="btns">
+        <button class="btn gold" onclick="showPanel('poster',document.querySelectorAll('.nav-tab')[1])">✦ View Research Poster</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span class="f-left">siddhi kabadi · santa clara university</span>
+    <span class="f-right">IoT · Embedded Systems · Sustainability</span>
+  </footer>
+</div>
+
+<!-- ═══ POSTER PANEL ═══ -->
+<div id="panel-poster" class="panel">
+  <div class="poster-panel-hero">
+    <p class="eyebrow" style="opacity:1;animation:none;">MIT IEEE URTC 2025 · Frugal InnovationHub</p>
+    <h1>Research <em>Poster</em></h1>
+    <p>Full visual summary of the Hydration Automation project — presented at MIT IEEE URTC 2025.</p>
+    <div class="poster-download-row">
+      <a href="Hydration_Automation_Poster.pdf" download class="btn gold">↙ Download Poster (PDF)</a>
+      <button class="btn" onclick="showPanel('overview',document.querySelectorAll('.nav-tab')[0])">← Back to Overview</button>
+    </div>
+  </div>
+  <div class="poster-viewer">
+    <div class="poster-frame-wrap">
+      <div class="poster-frame-label">
+        <span>Hydration Automation — MIT IEEE URTC 2025 Poster</span>
+        <span class="pfl-r">Siddhi Kabadi · Santa Clara University</span>
+      </div>
+      <iframe class="poster-embed" src="Hydration_Automation_Poster.pdf" title="Research Poster"></iframe>
+    </div>
+  </div>
+  <footer>
+    <span class="f-left">siddhi kabadi · santa clara university</span>
+    <span class="f-right">IoT · Embedded Systems · Sustainability</span>
+  </footer>
+</div>
+
+<script>
+  function showPanel(id, tabEl) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    tabEl.classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:0.08});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
+

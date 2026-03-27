@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Siddhi Kabadi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream:#F2EBE1; --warm:#FAF7F4; --ink:#1C1208; --ink-light:#3D2B1F;
+      --rust:#C00404; --gold:#A67C52; --sage:#8C7B72; --border:#D9C9BC; --border-l:#EDE3DA;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{background:var(--warm);color:var(--ink);font-family:'Lora',Georgia,serif;line-height:1.75;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:999;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;background:rgba(250,248,244,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:100;}
+    .nav-name{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-light);}
+    .nav-links{display:flex;gap:0.25rem;}
+    .nav-link{font-family:'DM Mono',monospace;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;padding:0 1rem;height:60px;display:flex;align-items:center;color:var(--ink-light);text-decoration:none;border-bottom:2px solid transparent;transition:all 0.2s;}
+    .nav-link:hover{color:var(--rust);}
+    .nav-link.active{color:var(--rust);border-bottom-color:var(--rust);}
+    .nav-link.project-link{color:var(--sage);}
+    .nav-link.project-link:hover{color:var(--rust);}
+
+    /* BROWN GREETING BANNER */
+    .brown-banner{background:var(--ink);color:var(--cream);padding:8rem 3rem 5rem;position:relative;overflow:hidden;}
+    .brown-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%, rgba(192,4,4,0.15) 0%, transparent 60%);}
+    .brown-banner-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;position:relative;z-index:1;}
+    .brown-greeting-label{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem;}
+    .brown-greeting-label::before{content:'';display:block;width:28px;height:1px;background:var(--rust);}
+    .brown-banner h1{font-size:clamp(2rem,4vw,3.2rem);font-weight:600;line-height:1.15;color:white;margin-bottom:1.25rem;}
+    .brown-banner h1 em{font-style:italic;color:var(--rust);}
+    .brown-banner p{font-size:1.05rem;color:rgba(237,227,218,0.8);line-height:1.85;max-width:560px;margin-bottom:1rem;}
+    .brown-banner p:last-of-type{margin-bottom:0;}
+    .brown-banner strong{color:white;}
+    .brown-logo-block{display:flex;flex-direction:column;align-items:center;gap:1.25rem;flex-shrink:0;}
+    .brown-logo-svg{width:100px;height:125px;}
+    .brown-logo-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(237,227,218,0.4);text-align:center;}
+    .brown-divider{height:1px;background:linear-gradient(to right, var(--rust), transparent);max-width:1000px;margin:0 auto;}
+
+    /* HERO */
+    .hero{min-height:100vh;display:grid;grid-template-columns:1fr 380px;gap:5rem;align-items:center;padding:7rem 3rem 5rem;max-width:1000px;margin:0 auto;position:relative;}
+    .hero-rule{position:absolute;left:50%;top:20%;width:1px;height:55%;background:linear-gradient(to bottom,transparent,var(--border),transparent);}
+    .eyebrow{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--rust);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s ease 0.2s forwards;}
+    .hero h1{font-size:clamp(2.8rem,5vw,4.2rem);font-weight:600;line-height:1.1;color:var(--ink);margin-bottom:0.5rem;opacity:0;animation:fadeUp 0.7s ease 0.35s forwards;}
+    .hero h1 em{font-style:italic;color:var(--rust);}
+    .hero-role{font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.06em;color:var(--sage);margin-bottom:2rem;opacity:0;animation:fadeUp 0.7s ease 0.5s forwards;}
+    .hero-bio{font-size:1.05rem;color:var(--ink-light);line-height:1.85;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.7s ease 0.65s forwards;}
+    .hero-bio strong{color:var(--ink);}
+    .hero-cta{display:flex;gap:0.75rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.7s ease 0.8s forwards;margin-top:0.5rem;}
+
+    /* PHOTO */
+    .hero-right{opacity:0;animation:fadeUp 0.8s ease 0.5s forwards;}
+    .photo-frame{position:relative;}
+    .photo-placeholder{width:100%;aspect-ratio:3/4;background:var(--cream);border:1px solid var(--border);overflow:hidden;}
+    .photo-placeholder img{width:100%;height:100%;object-fit:cover;display:block;}
+    .photo-caption{margin-top:1rem;padding:1rem 1.25rem;border:1px solid var(--border-l);background:var(--cream);}
+    .photo-caption-name{font-size:0.95rem;font-weight:600;color:var(--ink);display:block;margin-bottom:0.15rem;}
+    .photo-caption-sub{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--sage);letter-spacing:0.05em;}
+
+    /* MAIN */
+    main{max-width:1000px;margin:0 auto;padding:0 3rem 7rem;}
+    section{margin-bottom:5.5rem;}
+    .sec-head{display:flex;align-items:baseline;gap:1.5rem;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+    .sec-num{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--rust);letter-spacing:0.1em;}
+    h2{font-size:1.45rem;font-weight:600;color:var(--ink);}
+    p{color:var(--ink-light);margin-bottom:1.2rem;font-size:1rem;}
+    p:last-child{margin-bottom:0;}
+    p strong{color:var(--ink);}
+
+    /* EDUCATION */
+    .edu-card{background:var(--cream);border:1px solid var(--border);padding:2rem 2rem 2rem 2.5rem;position:relative;}
+    .edu-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--rust);}
+    .edu-school{font-size:1.1rem;font-weight:600;color:var(--ink);margin-bottom:0.25rem;}
+    .edu-degree{font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--rust);letter-spacing:0.05em;margin-bottom:0.75rem;}
+    .edu-details{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;}
+    .edu-tag{font-family:'DM Mono',monospace;font-size:0.67rem;padding:0.3rem 0.85rem;border:1px solid var(--border);color:var(--ink-light);}
+
+    /* RESEARCH */
+    .research-card{background:var(--cream);border:1px solid var(--border);padding:2rem 2rem 2rem 2.5rem;position:relative;margin-bottom:1.25rem;}
+    .research-card:last-child{margin-bottom:0;}
+    .research-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);}
+    .research-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;line-height:1.5;}
+    .research-title{font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:0.3rem;}
+    .research-meta{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--sage);margin-bottom:0.75rem;line-height:1.6;}
+    .research-desc{font-size:0.95rem;color:var(--ink-light);margin:0;}
+
+    /* SKILLS */
+    .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-l);border:1px solid var(--border);}
+    .skill-group{background:var(--warm);padding:1.5rem;}
+    .skill-group-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust);margin-bottom:1rem;}
+    .skill-pills{display:flex;flex-wrap:wrap;gap:0.45rem;}
+    .skill-pill{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.32rem 0.8rem;background:var(--cream);border:1px solid var(--border-l);color:var(--ink-light);transition:all 0.2s;cursor:default;}
+    .skill-pill:hover{border-color:var(--rust);color:var(--rust);}
+
+    /* PROJECTS */
+    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+    .project-card{border:1px solid var(--border);padding:1.75rem;text-decoration:none;color:inherit;display:block;transition:border-color 0.2s;position:relative;overflow:hidden;}
+    .project-card::after{content:'↗';position:absolute;top:1.25rem;right:1.25rem;font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--border);transition:color 0.2s;}
+    .project-card:hover{border-color:var(--rust);}
+    .project-card:hover::after{color:var(--rust);}
+    .project-type{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem;}
+    .project-title{font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:0.5rem;}
+    .project-desc{font-size:0.9rem;color:var(--ink-light);line-height:1.65;margin:0;}
+    .project-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem;}
+    .project-tag{font-family:'DM Mono',monospace;font-size:0.62rem;padding:0.25rem 0.7rem;background:var(--cream);border:1px solid var(--border-l);color:var(--ink-light);}
+
+    /* CONTACT */
+    .contact-row{display:flex;gap:1rem;flex-wrap:wrap;}
+    .contact-link{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;padding:0.85rem 1.6rem;border:1px solid var(--border);color:var(--ink-light);transition:all 0.2s;display:inline-flex;align-items:center;gap:0.6rem;}
+    .contact-link:hover{border-color:var(--rust);color:var(--rust);}
+    .contact-link.primary{background:var(--rust);border-color:var(--rust);color:white;}
+    .contact-link.primary:hover{background:#A00303;}
+
+    /* BTNS */
+    .btn{font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;padding:0.85rem 1.6rem;border:1px solid var(--ink);color:var(--ink);transition:all 0.2s;display:inline-flex;align-items:center;gap:0.5rem;cursor:pointer;background:none;}
+    .btn:hover{background:var(--ink);color:var(--warm);}
+    .btn.primary{background:var(--rust);border-color:var(--rust);color:white;}
+    .btn.primary:hover{background:#A00303;border-color:#A00303;}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:2rem 3rem;max-width:1000px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
+    .f-left{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--border);letter-spacing:0.08em;}
+    .f-right{font-family:'DM Mono',monospace;font-size:0.66rem;color:var(--ink-light);}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity 0.7s ease,transform 0.7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+
+    @media(max-width:780px){
+      nav{padding:0 1.5rem;}
+      .nav-links{display:none;}
+      .brown-banner{padding:7rem 1.5rem 4rem;}
+      .brown-banner-inner{grid-template-columns:1fr;gap:2rem;}
+      .brown-logo-block{flex-direction:row;justify-content:flex-start;}
+      .hero{grid-template-columns:1fr;gap:2.5rem;padding:5rem 1.5rem 4rem;}
+      .hero-rule{display:none;}
+      .hero-right{order:-1;}
+      .photo-placeholder{aspect-ratio:1/1;}
+      main{padding-left:1.5rem;padding-right:1.5rem;}
+      .skills-grid{grid-template-columns:1fr;}
+      .projects-grid{grid-template-columns:1fr;}
+      footer{padding-left:1.5rem;padding-right:1.5rem;flex-direction:column;gap:0.5rem;text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-name">Siddhi Kabadi</span>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">About</a>
+    <a class="nav-link project-link" href="passwordsindex.html">ML · Passwords</a>
+    <a class="nav-link project-link" href="hydrationindex.html">IoT · Irrigation</a>
+  </div>
+</nav>
+
+<!-- BROWN UNIVERSITY GREETING BANNER -->
+<div class="brown-banner">
+  <div class="brown-banner-inner">
+    <div>
+      <div class="brown-greeting-label">Brown University · MS Cybersecurity Application</div>
+      <h1>Hi, Brown<br><em>Cybersecurity</em><br>Masters Team.</h1>
+      <p>
+        My name is <strong>Siddhi Kabadi</strong>! Thank you for taking the time to visit my portfolio. I'm a senior computer science student at Santa Clara University with a concentration in <strong>cybersecurity</strong> and minors in <strong>mathematics</strong> and <strong>economics</strong>.
+      </p>
+      <p>
+        I built this site to bring together the research projects I’ve worked on during my undergraduate studies. I hope it offers a small perspective into how I think about technology, the questions that drive my work, and the mindset I’d bring to Brown 
+      </p>
+    </div>
+    <div class="brown-logo-block">
+      <svg class="brown-logo-svg" viewBox="0 0 160 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M80 4 L152 4 L152 130 Q152 172 80 196 Q8 172 8 130 L8 4 Z" fill="#C00404" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+        <path d="M80 14 L142 14 L142 128 Q142 165 80 186 Q18 165 18 128 L18 14 Z" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <line x1="18" y1="72" x2="142" y2="72" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        <line x1="80" y1="14" x2="80" y2="72" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        <text x="44" y="52" text-anchor="middle" font-size="18" fill="white" opacity="0.9">✦</text>
+        <text x="116" y="52" text-anchor="middle" font-size="18" fill="white" opacity="0.9">✦</text>
+        <rect x="38" y="82" width="84" height="58" rx="2" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+        <line x1="80" y1="82" x2="80" y2="140" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+        <line x1="48" y1="96" x2="72" y2="96" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <line x1="48" y1="104" x2="72" y2="104" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <line x1="48" y1="112" x2="72" y2="112" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <line x1="88" y1="96" x2="112" y2="96" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <line x1="88" y1="104" x2="112" y2="104" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <line x1="88" y1="112" x2="112" y2="112" stroke="rgba(255,255,255,0.35)" stroke-width="0.8"/>
+        <text x="80" y="133" text-anchor="middle" font-family="Georgia, serif" font-size="5.5" fill="rgba(255,255,255,0.7)" letter-spacing="0.5">VERITAS ET FIDES</text>
+      </svg>
+      <div class="brown-logo-label">Brown University<br/>Providence, RI · Est. 1764</div>
+    </div>
+  </div>
+</div>
+<div class="brown-divider"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-rule"></div>
+  <div class="hero-left">
+    <p class="eyebrow">CS Researcher · Santa Clara University</p>
+    <h1>Siddhi<br><em>Kabadi</em></h1>
+    <p class="hero-role">B.S. Computer Science · Cybersecurity · NSF REU Researcher</p>
+    <p class="hero-bio">
+      I’m a computer science student at Santa Clara University exploring <strong> cybersecurity, machine learning, and human-centered computing </strong>. 
+    </p>
+    <p class="hero-bio">
+       I’m a curious researcher 🔍, a security-minded engineer 🧠, and a technologist that balances security, usability, and human trust 🔐
+      
+      I’m fascinated by how people interact with technology and the subtle ways design choices shape privacy and security. By grounding my work in awareness, interaction, and representation (AIR), I aim to build systems that are secure, transparent, and genuinely centered around the people who use them.
+    </p>
+    <div class="hero-cta">
+      <a href="resume.pdf" download class="btn primary">↙ Download Resume</a>
+      <a href="mailto:skabadi@scu.edu" class="btn">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="photo-frame">
+      <div class="photo-placeholder">
+        <img src="siddhi.jpeg" alt="Siddhi Kabadi">
+      </div>
+      <div class="photo-caption">
+        <span class="photo-caption-name">Siddhi Kabadi</span>
+        <span class="photo-caption-sub">Santa Clara University · Class of 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- EDUCATION -->
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Education</h2></div>
+    <div class="edu-card">
+      <div class="edu-school">Santa Clara University</div>
+      <div class="edu-degree">B.S. Computer Science — Concentration in Cybersecurity</div>
+      <p style="margin:0;font-size:0.95rem;">Minor in Mathematics &amp; Minor in Economics</p>
+      <div class="edu-details">
+        <span class="edu-tag">Cybersecurity</span>
+        <span class="edu-tag">Machine Learning</span>
+        <span class="edu-tag">Mathematics</span>
+        <span class="edu-tag">Economics</span>
+        <span class="edu-tag">ACM-W Member</span>
+        <span class="edu-tag">IEEE Member</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Research Experience</h2></div>
+    <div class="research-card">
+      <div class="research-label">2025 Summer Research Intern · IMECE Poster &amp; MDPI Systems Journal Publication (In-Progress)</div>
+      <div class="research-title">NSF REU Researcher</div>
+      <div class="research-meta">University of Louisville &nbsp;·&nbsp; National Science Foundation REU Program &nbsp;·&nbsp; Advisor: Dr. Faisal Aqlan</div>
+      <p class="research-desc">Researched human-computer interaction in VR digital twin systems, analyzing eye-tracking and usability data while designing privacy-aware access controls.</p>
+    </div>
+    <div class="research-card">
+      <div class="research-label">ACM-W Cascadia Computing Conference Poster</div>
+      <div class="research-title">ML Analysis of Password Strength</div>
+      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; ACM-W &nbsp;·&nbsp; Advisor: Dr. Shiva Houshmand</div>
+      <p class="research-desc">Fine-tuned BERT on 468k labeled passwords to analyze password bias, structural vulnerability, and the relationship between linguistic features and strength classifications. Achieved 87% accuracy, 0.81 F1.</p>
+    </div>
+    <div class="research-card">
+      <div class="research-label">IEEE MIT URTC · IEEE GHTC · IEEE Silicon Valley Board Research Presentation</div>
+      <div class="research-title">Hydration Automation — Smart IoT Irrigation</div>
+      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; MIT IEEE URTC 2025 &nbsp;·&nbsp; Advisor: Dr. Navid Shaghaghi (Frugal Innovation Hub)</div>
+      <p class="research-desc">Designed and deployed a low-cost, solar-powered IoT irrigation system for Veggielution community farm in San Jose. Built soil moisture sensing units, LoRa radio communication, a custom energy protocol, and a real-time Next.js dashboard.</p>
+    </div>
+    <div class="research-card">
+      <div class="research-label">Quarter Capstone Project</div>
+      <div class="research-title">Click Cleverly - Privacy Policies</div>
+      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; Advisor: Dr. Kai Lukoff</div>
+      <p class="research-desc">Explored digital consent and dark patterns in privacy policies by analyzing Terms of Service agreements and designing a privacy-aware interface prototype that helps users understand legal risk and make informed decisions.</p>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Skills &amp; Technologies</h2></div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-label">Languages</div>
+        <div class="skill-pills">
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">Java</span>
+          <span class="skill-pill">C / C++</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">TypeScript</span>
+          <span class="skill-pill">SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">ML &amp; Data</div>
+        <div class="skill-pills">
+          <span class="skill-pill">PyTorch</span>
+          <span class="skill-pill">HuggingFace</span>
+          <span class="skill-pill">Scikit-learn</span>
+          <span class="skill-pill">Pandas</span>
+          <span class="skill-pill">NumPy</span>
+          <span class="skill-pill">Matplotlib</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-label">Systems &amp; Web</div>
+        <div class="skill-pills">
+          <span class="skill-pill">React / Next.js</span>
+          <span class="skill-pill">MongoDB</span>
+          <span class="skill-pill">Express.js</span>
+          <span class="skill-pill">IoT / LoRa</span>
+          <span class="skill-pill">Embedded Systems</span>
+          <span class="skill-pill">Linux</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Projects</h2></div>
+    <div class="projects-grid">
+      <a href="passwordsindex.html" class="project-card">
+        <div class="project-type">ML · NLP · Cybersecurity</div>
+        <div class="project-title">ML Analysis of Password Strength</div>
+        <p class="project-desc">Fine-tuned BERT on 468k passwords to analyze password bias and vulnerability patterns. 87% accuracy, published at ACM-W.</p>
+        <div class="project-tags">
+          <span class="project-tag">BERT</span>
+          <span class="project-tag">PyTorch</span>
+          <span class="project-tag">KMeans</span>
+          <span class="project-tag">zxcvbn</span>
+        </div>
+      </a>
+      <a href="hydrationindex.html" class="project-card">
+        <div class="project-type">IoT · Embedded · Sustainability</div>
+        <div class="project-title">Hydration Automation</div>
+        <p class="project-desc">Solar-powered IoT irrigation system deployed at a community farm. LoRa radio, custom energy protocol, real-time web dashboard.</p>
+        <div class="project-tags">
+          <span class="project-tag">LoRa</span>
+          <span class="project-tag">Next.js</span>
+          <span class="project-tag">MongoDB</span>
+          <span class="project-tag">EACP</span>
+        </div>
+      </a>
+      <a href="https://medium.com/@aimalik/click-cleverly-making-terms-of-service-crystal-clear-6fb8af7c5756" class="project-card" target="_blank">
+        <div class="project-type">Privacy · HCI · Digital Consent</div>
+        <div class="project-title">Click Cleverly</div>
+        <p class="project-desc">Privacy design project analyzing dark patterns in Terms of Service agreements and prototyping a Figma interface that translates complex legal clauses into clear risk indicators and user-friendly consent decisions.</p>
+        <div class="project-tags">
+          <span class="project-tag">Figma</span>
+          <span class="project-tag">Digital Consent</span>
+          <span class="project-tag">Privacy Design</span>
+          <span class="project-tag">HCI</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="reveal">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Get in Touch</h2></div>
+    <p>Currently applying to graduate programs in computer science. Open to research conversations, collaborations, and opportunities.</p>
+    <div class="contact-row">
+      <a href="mailto:skabadi@scu.edu" class="contact-link primary">✉ Email Me</a>
+      <a href="https://linkedin.com/in/siddhikabadi/" target="_blank" class="contact-link">LinkedIn ↗</a>
+      <a href="resume.pdf" download class="contact-link">↙ Resume</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="f-left">siddhi kabadi · santa clara university · 2026</span>
+  <span class="f-right">CS · Cybersecurity · Research</span>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  }), {threshold: 0.08});
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
