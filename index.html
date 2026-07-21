@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,13 +66,17 @@
     .edu-tag{font-family:'DM Mono',monospace;font-size:0.67rem;padding:0.3rem 0.85rem;border:1px solid var(--border);color:var(--ink-light);}
 
     /* RESEARCH */
-    .research-card{background:var(--cream);border:1px solid var(--border);padding:2rem 2rem 2rem 2.5rem;position:relative;margin-bottom:1.25rem;}
-    .research-card:last-child{margin-bottom:0;}
+    .research-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+    .research-card{background:var(--cream);border:1px solid var(--border);padding:1.85rem 1.85rem 1.5rem;position:relative;display:flex;flex-direction:column;text-decoration:none;color:inherit;transition:border-color 0.2s;min-height:260px;}
     .research-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);}
+    .research-card.linked{cursor:pointer;}
+    .research-card.linked:hover{border-color:var(--rust);}
     .research-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;line-height:1.5;}
     .research-title{font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:0.3rem;}
     .research-meta{font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--sage);margin-bottom:0.75rem;line-height:1.6;}
-    .research-desc{font-size:0.95rem;color:var(--ink-light);margin:0;}
+    .research-desc{font-size:0.95rem;color:var(--ink-light);margin:0;flex:1;}
+    .research-cta{margin-top:1.25rem;padding-top:0.9rem;border-top:1px solid var(--border-l);font-family:'DM Mono',monospace;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;justify-content:space-between;transition:color 0.2s;}
+    .research-card.linked:hover .research-cta{color:var(--rust);}
 
     /* SKILLS */
     .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-l);border:1px solid var(--border);}
@@ -80,18 +85,6 @@
     .skill-pills{display:flex;flex-wrap:wrap;gap:0.45rem;}
     .skill-pill{font-family:'DM Mono',monospace;font-size:0.68rem;padding:0.32rem 0.8rem;background:var(--cream);border:1px solid var(--border-l);color:var(--ink-light);transition:all 0.2s;cursor:default;}
     .skill-pill:hover{border-color:var(--rust);color:var(--rust);}
-
-    /* PROJECTS */
-    .projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
-    .project-card{border:1px solid var(--border);padding:1.75rem;text-decoration:none;color:inherit;display:block;transition:border-color 0.2s;position:relative;overflow:hidden;}
-    .project-card::after{content:'↗';position:absolute;top:1.25rem;right:1.25rem;font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--border);transition:color 0.2s;}
-    .project-card:hover{border-color:var(--rust);}
-    .project-card:hover::after{color:var(--rust);}
-    .project-type{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--sage);margin-bottom:0.5rem;}
-    .project-title{font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:0.5rem;}
-    .project-desc{font-size:0.9rem;color:var(--ink-light);line-height:1.65;margin:0;}
-    .project-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem;}
-    .project-tag{font-family:'DM Mono',monospace;font-size:0.62rem;padding:0.25rem 0.7rem;background:var(--cream);border:1px solid var(--border-l);color:var(--ink-light);}
 
     /* CONTACT */
     .contact-row{display:flex;gap:1rem;flex-wrap:wrap;}
@@ -128,7 +121,7 @@
       .photo-placeholder{aspect-ratio:1/1;}
       main{padding-left:1.5rem;padding-right:1.5rem;}
       .skills-grid{grid-template-columns:1fr;}
-      .projects-grid{grid-template-columns:1fr;}
+      .research-grid{grid-template-columns:1fr;}
       footer{padding-left:1.5rem;padding-right:1.5rem;flex-direction:column;gap:0.5rem;text-align:center;}
     }
   </style>
@@ -139,6 +132,7 @@
   <span class="nav-name">Siddhi Kabadi</span>
   <div class="nav-links">
     <a class="nav-link active" href="index.html">About</a>
+    <a class="nav-link project-link" href="digitaltwinindex.html">VR · Digital Twin</a>
     <a class="nav-link project-link" href="passwordsindex.html">ML · Passwords</a>
     <a class="nav-link project-link" href="hydrationindex.html">IoT · Irrigation</a>
     <a class="nav-link project-link" href="clickcleverlyindex.html">Click Cleverly</a>
@@ -157,14 +151,9 @@
     <p class="hero-role">B.S. Computer Science · Cybersecurity · NSF REU Researcher</p>
     <p class="hero-bio">
       Hello! I'm Siddhi, an incoming Sc.M. Cybersecurity student at Brown University, and a recent Computer Science graduate from Santa Clara University. I'm interested in <strong> digital privacy, machine learning, human-centered computing: and the sociotechnical questions that sit at their intersection. </strong> 
-    </p>
-    <p class="hero-bio">
-       At Santa Clara, I researched <strong> password policies and strength meters </strong> under Dr. Shiva Houshmand using machine learning. I developed a BERT based cased model to understand password strength, compare its conclusions to existing tools such as the zxcvbn library and LUDS, and develop a framework to accurately study the safety of a password. Additionally, I worked with Dr. Navid Shaghaghi as an IoT Researcher, where I helped design and deploy a low-cost, solar-powered smart-irrigation system to a local community farm. My role included developing a real-time dashboard to visualize agricultural data and work with community farmers to aid their needs.
-      I also studied <strong> digital consent and privacy policies </strong> under Dr. Kai Lukoff. I studied dark patterns through user interviews and prototype designs, and studied how UI/UX changes can make privacy understandable and feasible.
-      In Summer 2025, I worked as a research intern under Dr. Faisal Aqlan through the NSF's REU program at the University of Louisville. I helped develop a VR manufacturing digital twin, and conducted research on the < strong> usability </strong>of the system. I conducted data analysis using SUS scores, interaction logs, and SIM/TLX data. I co-authored a paper outlining design changes and usability recommendations based on task performance, interaction patterns and reported behavior. 
-
       <br>
-      Through these projects, I became interested in HCI, privacy, and technology policy. I'm especially interested in how UX/UI design, data practices, and privacy policies shape how people percieve security & how they are impacted by technology. 
+      As an undergraduate, I conducted research on password security under Dr. Shiva Houshmand, digital safety and privacy policies with Dr. Kai Lukoff, IoT Research with Dr. Navid Shaghaghi, and usability research under Dr. Faisal Aqlan through the NSF's REU Program at the University of Louisville. More details regarding my research can be found below!
+    </p>
     <div class="hero-cta">
       <a href="resume.pdf" download class="btn primary">↙ Download Resume</a>
       <a href="mailto:skabadi@scu.edu" class="btn">Get in Touch</a>
@@ -190,8 +179,12 @@
   <section class="reveal">
     <div class="sec-head"><span class="sec-num">01</span><h2>Education</h2></div>
     <div class="edu-card">
+      <div class="edu-school">Brown University</div>
+      <div class="edu-degree">ScM in Cybersecurity</div>
+    </div>
+    <div class="edu-card">
       <div class="edu-school">Santa Clara University</div>
-      <div class="edu-degree">B.S. Computer Science — Concentration in Cybersecurity</div>
+      <div class="edu-degree">B.S. Computer Science (Concentration in Cybersecurity) </div>
       <p style="margin:0;font-size:0.95rem;">Minor in Mathematics &amp; Minor in Economics</p>
       <div class="edu-details">
         <span class="edu-tag">Cybersecurity</span>
@@ -207,29 +200,35 @@
   <!-- RESEARCH -->
   <section class="reveal">
     <div class="sec-head"><span class="sec-num">02</span><h2>Research Experience</h2></div>
-    <div class="research-card">
-      <div class="research-label">2025 Summer Research Intern · IMECE Poster &amp; MDPI Systems Journal Publication (In-Progress)</div>
-      <div class="research-title">NSF REU Researcher</div>
-      <div class="research-meta">University of Louisville &nbsp;·&nbsp; National Science Foundation REU Program &nbsp;·&nbsp; Advisor: Dr. Faisal Aqlan</div>
-      <p class="research-desc">Researched human-computer interaction in VR digital twin systems, analyzing eye-tracking and usability data while designing privacy-aware access controls.</p>
-    </div>
-    <div class="research-card">
-      <div class="research-label">ACM-W Cascadia Computing Conference Poster</div>
-      <div class="research-title">ML Analysis of Password Strength</div>
-      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; ACM-W &nbsp;·&nbsp; Advisor: Dr. Shiva Houshmand</div>
-      <p class="research-desc">Fine-tuned BERT on 468k labeled passwords to analyze password bias, structural vulnerability, and the relationship between linguistic features and strength classifications. Achieved 87% accuracy, 0.81 F1.</p>
-    </div>
-    <div class="research-card">
-      <div class="research-label">IEEE MIT URTC · IEEE GHTC · IEEE Silicon Valley Board Research Presentation</div>
-      <div class="research-title">Hydration Automation — Smart IoT Irrigation</div>
-      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; MIT IEEE URTC 2025 &nbsp;·&nbsp; Advisor: Dr. Navid Shaghaghi (Frugal Innovation Hub)</div>
-      <p class="research-desc">Designed and deployed a low-cost, solar-powered IoT irrigation system for Veggielution community farm in San Jose. Built soil moisture sensing units, LoRa radio communication, a custom energy protocol, and a real-time Next.js dashboard.</p>
-    </div>
-    <div class="research-card">
-      <div class="research-label">Quarter Capstone Project</div>
-      <div class="research-title">Click Cleverly - Privacy Policies</div>
-      <div class="research-meta">Santa Clara University &nbsp;·&nbsp; Advisor: Dr. Kai Lukoff</div>
-      <p class="research-desc">Explored digital consent and dark patterns in privacy policies by analyzing Terms of Service agreements and designing a privacy-aware interface prototype that helps users understand legal risk and make informed decisions.</p>
+    <div class="research-grid">
+      <a class="research-card linked" href="digitaltwinindex.html#poster">
+        <div class="research-label">2025 Summer Research Intern · HFES 2026 Poster &amp; MDPI Systems Journal Publication (In-Progress)</div>
+        <div class="research-title">NSF REU Researcher</div>
+        <div class="research-meta">University of Louisville &nbsp;·&nbsp; National Science Foundation REU Program &nbsp;·&nbsp; Advisor: Dr. Faisal Aqlan</div>
+        <p class="research-desc">Researched human-computer interaction in VR digital twin systems & conducted data analysis to outline design suggestions and usability recommendations.</p>
+        <div class="research-cta"><span>View Research Poster</span><span>↗</span></div>
+      </a>
+      <a class="research-card linked" href="passwordsindex.html#poster">
+        <div class="research-label">ACM-W Cascadia Computing Conference Poster</div>
+        <div class="research-title">ML Analysis of Password Strength</div>
+        <div class="research-meta">Santa Clara University &nbsp;·&nbsp; ACM-W &nbsp;·&nbsp; Advisor: Dr. Shiva Houshmand</div>
+        <p class="research-desc">Fine-tuned BERT on 468k labeled passwords to understand password security, analyze lingusitic bias, and develop a framework to accurately develop password policies. Achieved 87% accuracy, 0.81 F1.</p>
+        <div class="research-cta"><span>View Research Poster</span><span>↗</span></div>
+      </a>
+      <a class="research-card linked" href="hydrationindex.html#poster">
+        <div class="research-label">IEEE MIT URTC · IEEE GHTC · IEEE Silicon Valley Board Research Presentation</div>
+        <div class="research-title">Hydration Automation: Smart IoT Irrigation</div>
+        <div class="research-meta">Santa Clara University &nbsp;·&nbsp; MIT IEEE URTC 2025 &nbsp;·&nbsp; Advisor: Dr. Navid Shaghaghi (Frugal Innovation Hub)</div>
+        <p class="research-desc">Designed and deployed a low-cost, solar-powered IoT irrigation system for Veggielution community farm in San Jose. Built soil moisture sensing units, LoRa radio communication, a custom energy protocol, and a real-time Next.js dashboard.</p>
+        <div class="research-cta"><span>View Research Poster</span><span>↗</span></div>
+      </a>
+      <a class="research-card linked" href="clickcleverlyindex.html">
+        <div class="research-label">Quarter Capstone Project</div>
+        <div class="research-title">Click Cleverly: Privacy Policies</div>
+        <div class="research-meta">Santa Clara University &nbsp;·&nbsp; Advisor: Dr. Kai Lukoff</div>
+        <p class="research-desc">Explored digital consent and dark patterns in privacy policies by analyzing Terms of Service agreements and designing a privacy-aware interface prototype that helps users understand legal risk and make informed decisions. Researched how UI/UX changes make privacy understandable and feasible</p>
+        <div class="research-cta"><span>View Full Project</span><span>↗</span></div>
+      </a>
     </div>
   </section>
 
@@ -273,49 +272,9 @@
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <section class="reveal">
-    <div class="sec-head"><span class="sec-num">04</span><h2>Projects</h2></div>
-    <div class="projects-grid">
-      <a href="passwordsindex.html" class="project-card">
-        <div class="project-type">ML · NLP · Cybersecurity</div>
-        <div class="project-title">ML Analysis of Password Strength</div>
-        <p class="project-desc">Fine-tuned BERT on 468k passwords to analyze password bias and vulnerability patterns. 87% accuracy, published at ACM-W.</p>
-        <div class="project-tags">
-          <span class="project-tag">BERT</span>
-          <span class="project-tag">PyTorch</span>
-          <span class="project-tag">KMeans</span>
-          <span class="project-tag">zxcvbn</span>
-        </div>
-      </a>
-      <a href="hydrationindex.html" class="project-card">
-        <div class="project-type">IoT · Embedded · Sustainability</div>
-        <div class="project-title">Hydration Automation</div>
-        <p class="project-desc">Solar-powered IoT irrigation system deployed at a community farm. LoRa radio, custom energy protocol, real-time web dashboard.</p>
-        <div class="project-tags">
-          <span class="project-tag">LoRa</span>
-          <span class="project-tag">Next.js</span>
-          <span class="project-tag">MongoDB</span>
-          <span class="project-tag">EACP</span>
-        </div>
-      </a>
-      <a href="clickcleverlyindex.html" class="project-card">
-        <div class="project-type">Privacy · HCI · Digital Consent</div>
-        <div class="project-title">Click Cleverly</div>
-        <p class="project-desc">Privacy design project analyzing dark patterns in Terms of Service agreements and prototyping a Figma interface that translates complex legal clauses into clear risk indicators and user-friendly consent decisions.</p>
-        <div class="project-tags">
-          <span class="project-tag">Figma</span>
-          <span class="project-tag">Digital Consent</span>
-          <span class="project-tag">Privacy Design</span>
-          <span class="project-tag">HCI</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
   <!-- CONTACT -->
   <section class="reveal">
-    <div class="sec-head"><span class="sec-num">05</span><h2>Get in Touch</h2></div>
+    <div class="sec-head"><span class="sec-num">04</span><h2>Get in Touch</h2></div>
     <p>I'm interested in cybersecurity & privacy engineering roles. Open to research conversations, collaborations, and opportunities.</p>
     <div class="contact-row">
       <a href="mailto:skabadi@scu.edu" class="contact-link primary">✉ Email Me</a>
