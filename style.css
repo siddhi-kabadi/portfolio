@@ -1,0 +1,324 @@
+/* ============================================================
+   Siddhi Kabadi — portfolio stylesheet
+   A fixed left sidebar (portrait, name, tabs, contact) beside a
+   flowing content column. Deep ink-navy accent, small-caps
+   wordmark, inline hover popovers for extra detail.
+   ============================================================ */
+
+:root {
+  --paper: #F7F5EF;
+  --ink: #1B1B19;
+  --ink-soft: #58564E;
+  --ink-faint: #9C978A;
+  --accent: #2E4635;
+  --accent-soft: #4C6B54;
+  --line: #DEDACE;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:
+    radial-gradient(circle, rgba(46,70,53,0.05) 0.6px, transparent 0.6px) 0 0/14px 14px,
+    var(--paper);
+  color:var(--ink);
+  font-family:'PT Serif', Georgia, 'Times New Roman', serif;
+  font-size:1.05rem;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+a{color:inherit;text-decoration:none;}
+em{font-style:italic;}
+
+/* ---------- LAYOUT ---------- */
+.page{display:flex;min-height:100vh;}
+
+/* ---------- SIDEBAR ---------- */
+.sidebar{
+  width:300px;flex-shrink:0;
+  padding:2.75rem 2.5rem 2.25rem;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+}
+.sb-photo{
+  width:112px;height:112px;border-radius:4px;
+  object-fit:cover;margin-bottom:1.25rem;
+  filter:grayscale(10%);
+}
+.sb-name{
+  font-size:1.05rem;
+  font-weight:600;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:0.3rem;
+}
+.sb-tagline{
+  color:var(--accent);
+  font-style:italic;
+  font-size:0.92rem;
+  margin-bottom:1.75rem;
+}
+.sb-nav{display:flex;flex-direction:column;gap:0.15rem;margin-bottom:auto;}
+.sb-tab{
+  padding:0.55rem 0 0.55rem 0.9rem;
+  border-left:2px solid transparent;
+  color:var(--ink-faint);
+  font-size:0.98rem;
+  transition:color 0.2s, border-color 0.2s;
+}
+.sb-tab:hover{color:var(--ink);}
+.sb-tab.active{color:var(--accent);border-left-color:var(--accent);font-weight:600;}
+
+.sb-contact{margin-top:2rem;display:flex;flex-direction:column;gap:0.4rem;}
+.sb-contact a{color:var(--ink-faint);font-size:0.86rem;transition:color 0.2s;}
+.sb-contact a:hover{color:var(--accent);}
+
+/* ---------- CONTENT ---------- */
+.content{
+  flex:1;min-width:0;padding:2.25rem 3rem;
+  display:flex;flex-direction:column;
+  justify-content:center;justify-content:safe center;
+}
+.content-inner{max-width:600px;width:100%;}
+.content-inner.centered{margin-left:auto;margin-right:auto;}
+
+/* the intro block (matcha + bio) sits above the photo carousel;
+   the whole content-inner is vertically centered by .content above */
+.hero-center{
+  display:flex;flex-direction:column;
+  align-items:center;
+  text-align:left;
+}
+
+/* ---------- BIO / ABOUT ---------- */
+.bio p{margin-bottom:0.9rem;color:var(--ink);}
+.bio p:last-child{margin-bottom:0;}
+.bio p:first-of-type::first-letter{
+  font-family:'PT Serif', Georgia, serif;
+  font-size:2.5rem;
+  font-weight:600;
+  color:var(--accent);
+  float:left;
+  line-height:0.78;
+  padding-right:0.1em;
+  padding-top:0.04em;
+}
+
+/* ---------- ORNAMENTAL DIVIDER ---------- */
+.ornament{display:flex;align-items:center;justify-content:center;gap:0.85rem;margin:0.25rem 0 1.25rem;}
+.orn-line{width:52px;height:1px;background:var(--line);}
+.orn-mark{width:6px;height:6px;background:var(--accent);transform:rotate(45deg);flex-shrink:0;}
+
+/* ---------- LIFE UPDATES LABEL (above photo carousel) ---------- */
+.life-updates{
+  text-align:center;
+  font-weight:600;
+  font-style:italic;
+  color:var(--accent);
+  margin:0.2rem 0 0.7rem;
+}
+
+/* ---------- SECTION PAGE HEADS (Research / Education) ---------- */
+.page-head{margin-bottom:1.25rem;}
+.page-title{
+  font-size:clamp(1.5rem,2.6vw,1.9rem);
+  font-weight:600;font-style:italic;
+  color:var(--accent);text-align:center;
+  margin-bottom:0.6rem;letter-spacing:0.01em;
+}
+
+/* ---------- MATCHA DECORATION ---------- */
+.matcha-deco{display:flex;justify-content:center;margin-bottom:0.85rem;}
+.matcha-deco svg{width:82px;height:82px;overflow:visible;}
+.matcha-steam{
+  fill:none;stroke:var(--accent-soft);stroke-width:2;stroke-linecap:round;
+  opacity:0;transform-origin:center;
+  animation:matchaSteam 2.8s ease-in-out infinite;
+}
+.matcha-steam.s2{animation-delay:0.7s;}
+@keyframes matchaSteam{
+  0%{opacity:0;transform:translateY(0) scaleY(0.7);}
+  30%{opacity:0.8;}
+  80%{opacity:0;}
+  100%{opacity:0;transform:translateY(-10px) scaleY(1.1);}
+}
+.matcha-whisk{
+  transform-origin:60px 22px;
+  animation:whiskSwing 2.4s ease-in-out infinite;
+}
+@keyframes whiskSwing{
+  0%,100%{transform:rotate(-9deg);}
+  50%{transform:rotate(9deg);}
+}
+
+/* ---------- PHOTO CAROUSEL ---------- */
+.stack-section{margin-top:0.25rem;}
+.carousel{
+  display:flex;align-items:center;justify-content:center;
+  gap:1rem;margin-bottom:0.75rem;
+}
+.car-photo-frame{
+  width:145px;height:145px;flex-shrink:0;
+  overflow:hidden;border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(27,27,25,0.12);
+}
+.car-photo{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:opacity 0.25s ease;
+}
+.car-arrow{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  border:1px solid var(--line);background:var(--paper);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--accent);cursor:pointer;
+  transition:background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+.car-arrow svg{width:13px;height:13px;}
+.car-arrow:hover{background:var(--accent);color:var(--paper);border-color:var(--accent);transform:scale(1.08);}
+.car-arrow:active{transform:scale(0.96);}
+.stack-caption{
+  text-align:center;
+  font-style:italic;
+  color:var(--ink-soft);
+  font-size:0.92rem;
+  min-height:1.6em;
+  transition:opacity 0.25s ease;
+}
+.stack-hint{
+  text-align:center;color:var(--ink-faint);font-size:0.85rem;
+  margin-top:0.35rem;letter-spacing:0.03em;
+}
+
+/* hover popover for inline terms — a compact boxed note directly
+   beneath the phrase, not a full-margin sidenote */
+.term{
+  position:relative;
+  text-decoration:underline;
+  text-decoration-color:var(--accent-soft);
+  text-decoration-thickness:1.5px;
+  text-underline-offset:4px;
+  cursor:default;
+  transition:text-decoration-color 0.2s ease;
+}
+.term:hover{text-decoration-color:var(--accent);}
+.term .pop{
+  position:absolute;
+  left:0;top:calc(100% + 0.4rem);
+  width:260px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-top:2px solid var(--accent);
+  padding:0.75rem 0.9rem;
+  font-size:1rem;
+  font-style:italic;
+  color:var(--ink-soft);
+  line-height:1.5;
+  opacity:0;
+  transform:translateY(-4px);
+  pointer-events:none;
+  transition:opacity 0.2s ease, transform 0.2s ease;
+  z-index:20;
+}
+.term:hover .pop{opacity:1;transform:none;}
+@media(max-width:640px){
+  .term .pop{
+    position:static;display:inline;width:auto;border:none;
+    padding:0;margin:0;opacity:1;transform:none;color:var(--ink-soft);
+  }
+  .term .pop::before{content:" — ";color:var(--ink-faint);font-style:normal;}
+}
+
+.emph{color:var(--accent);font-weight:600;font-style:italic;}
+
+/* ---------- RESEARCH LIST ---------- */
+.r-entry{padding:0.9rem 0;border-bottom:1px solid var(--line);}
+.r-entry:first-child{padding-top:0;}
+.r-entry:last-child{border-bottom:none;}
+.r-top{display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;}
+.r-title{font-size:1.1rem;font-weight:600;color:var(--accent);}
+.r-title:hover{color:var(--accent-soft);}
+.r-venue{color:var(--ink-faint);font-size:0.85rem;white-space:nowrap;flex-shrink:0;}
+.r-meta{color:var(--ink-soft);font-style:italic;font-size:0.92rem;margin-top:0.15rem;}
+.r-note{
+  position:relative;
+  max-height:0;opacity:0;overflow:hidden;margin-top:0;
+  transition:max-height 0.35s ease, opacity 0.25s ease, margin-top 0.35s ease, padding-left 0.35s ease;
+  color:var(--ink-soft);font-size:0.92rem;line-height:1.5;
+  padding-left:0;
+}
+.r-note::before{
+  content:"{";
+  position:absolute;
+  left:0;top:-0.08em;
+  font-family:'PT Serif', Georgia, serif;
+  font-size:1.7rem;
+  font-weight:600;
+  color:var(--accent);
+  line-height:1;
+}
+.r-entry:hover .r-note{max-height:210px;opacity:1;margin-top:0.5rem;padding-left:1.3rem;}
+.r-note .skills{display:block;margin-top:0.3rem;color:var(--ink-faint);font-size:0.8rem;font-style:italic;}
+.r-note .doc-links{display:flex;gap:1.1rem;margin-top:0.5rem;}
+.r-note .doc-links a{
+  font-style:normal;color:var(--accent);font-size:0.8rem;
+  border-bottom:1px solid var(--accent-soft);padding-bottom:1px;
+}
+.r-note .doc-links a:hover{border-color:var(--accent);}
+
+@media(max-width:640px){
+  .r-top{flex-direction:column;gap:0.2rem;}
+  .r-note{max-height:none;opacity:1;margin-top:0.5rem;overflow:visible;padding-left:1.3rem;}
+}
+
+/* ---------- PROJECT PAGES ---------- */
+.proj-eyebrow{color:var(--ink-faint);font-size:0.82rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.5rem;}
+.proj-title{font-size:clamp(1.5rem,2.6vw,1.9rem);font-weight:600;color:var(--accent);line-height:1.2;margin-bottom:0.75rem;}
+.proj-desc{margin-bottom:0.75rem;color:var(--ink);}
+.proj-skills{color:var(--ink-faint);font-style:italic;font-size:0.9rem;margin-bottom:1.5rem;}
+.proj-skills .k{color:var(--ink-soft);font-style:normal;text-transform:uppercase;letter-spacing:0.05em;font-size:0.75rem;}
+.proj-link{color:var(--accent);border-bottom:1px solid var(--accent);padding-bottom:1px;}
+
+.doc-block{margin-bottom:1.5rem;}
+.doc-label{color:var(--ink-faint);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;}
+.doc-embed{width:100%;height:58vh;border:1px solid var(--line);display:block;}
+
+/* ---------- DESIGN WALKTHROUGH FIGURES ---------- */
+.walk-back{margin-bottom:1.25rem;}
+.walk-back.bottom{margin-top:0.5rem;margin-bottom:0;}
+.walk-medium{margin-bottom:1.75rem;}
+.walk-figure{margin-bottom:2rem;}
+.walk-figure.tight{margin-bottom:1.25rem;}
+.walk-figure.last{margin-bottom:0.5rem;}
+.walk-figure img{
+  width:100%;display:block;border:1px solid var(--line);
+  box-shadow:0 6px 18px rgba(27,27,25,0.1);
+}
+.walk-figure figcaption{
+  margin-top:0.4rem;font-size:0.82rem;font-style:italic;color:var(--ink-soft);
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){
+  .page{flex-direction:column;}
+  .sidebar{
+    width:auto;flex-direction:row;align-items:center;flex-wrap:wrap;
+    padding:1.5rem;border-right:none;border-bottom:1px solid var(--line);
+    gap:1.25rem;
+  }
+  .sb-photo{width:48px;height:48px;margin-bottom:0;}
+  .sb-name{margin-bottom:0;}
+  .sb-tagline{display:none;}
+  .sb-nav{flex-direction:row;margin-bottom:0;margin-left:auto;gap:0.5rem;}
+  .sb-tab{border-left:none;border-bottom:2px solid transparent;padding:0.3rem 0.6rem;}
+  .sb-tab.active{border-left-color:transparent;border-bottom-color:var(--accent);}
+  .sb-contact{flex-direction:row;margin-top:0;width:100%;order:3;gap:1.25rem;}
+  .content{padding:2rem 1.5rem;justify-content:flex-start;}
+}
+
+@media(max-width:480px){
+  .car-photo-frame{width:130px;height:130px;}
+  .carousel{gap:0.7rem;}
+  .matcha-deco svg{width:72px;height:72px;}
+}

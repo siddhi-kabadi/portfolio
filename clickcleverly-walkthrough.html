@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Click Cleverly — Design Walkthrough — Siddhi Kabadi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="page">
+  <aside class="sidebar">
+    <img class="sb-photo" src="siddhi.jpeg" alt="Siddhi Kabadi">
+    <div class="sb-name">Siddhi Kabadi</div>
+    <div class="sb-tagline">CS &amp; Cybersecurity</div>
+    <nav class="sb-nav">
+      <a class="sb-tab" href="index.html">About</a>
+      <a class="sb-tab" href="education.html">Education</a>
+      <a class="sb-tab active" href="research.html">Research</a>
+    </nav>
+    <div class="sb-contact">
+      <a href="mailto:skabadi@scu.edu">skabadi [at] scu [dot] edu</a>
+      <a href="https://linkedin.com/in/siddhikabadi/" target="_blank">LinkedIn</a>
+      <a href="resume.pdf" download>Resume</a>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div class="content-inner">
+      <p class="walk-back"><a href="clickcleverlyindex.html" class="proj-link">← Back to project</a></p>
+
+      <div class="proj-eyebrow">Santa Clara University · HCI Capstone</div>
+      <h1 class="proj-title">Click Cleverly — Design Walkthrough</h1>
+      <p class="proj-desc">Two core flows: an interactive consent quiz that turns legal clauses into plain questions, and a color-coded risk scale that flags concerning clauses in the contract itself.</p>
+      <p class="walk-medium"><a href="https://medium.com/@aimalik/click-cleverly-making-terms-of-service-crystal-clear-6fb8af7c5756" target="_blank" class="proj-link">Read the full write-up on Medium ↗</a></p>
+
+      <figure class="walk-figure">
+        <img src="clickcleverly-mockups/mockup-1.jpg" alt="Click Cleverly logo and banner">
+      </figure>
+
+      <div class="doc-label">Where it started</div>
+      <p class="proj-desc">The earliest sketch tested a click-to-reveal popup on a live Terms of Service page — user-initiated, not intrusive. That principle carried through every version that followed.</p>
+      <figure class="walk-figure">
+        <img src="clickcleverly-mockups/mockup-7.jpg" alt="Early hand-drawn sketch of Click Cleverly design concept showing Kaiser Permanente TOS with a popup overlay">
+        <figcaption>Fig 1 — initial paper prototype, designed for apps with high-stakes privacy implications like medical or banking.</figcaption>
+      </figure>
+
+      <div class="doc-label">Feature 1 — Interactive Consent Quiz</div>
+      <p class="proj-desc">Legal clauses become direct yes/no questions — "Do you agree to let this company sell your data?" — so users engage instead of skimming past them.</p>
+      <figure class="walk-figure tight">
+        <img src="clickcleverly-mockups/mockup-2.jpg" alt="Interactive quiz screens showing yes/no questions about data tracking">
+        <figcaption>Fig 2 — the quiz flow surfaces consequences in real time, ending in a personalized outcome.</figcaption>
+      </figure>
+      <figure class="walk-figure">
+        <img src="clickcleverly-mockups/mockup-3.jpg" alt="Post-quiz screens showing alternative recommendations and saved preferences">
+        <figcaption>Fig 3 — after rejecting a TOS, users get safer alternatives, so "no" isn't a dead end.</figcaption>
+      </figure>
+
+      <div class="doc-label">Feature 2 — Color-Coded Risk Highlighting</div>
+      <p class="proj-desc">The actual TOS text gets overlaid with color-coded highlights and plain-language explanations, so risky clauses are visible at a glance.</p>
+      <figure class="walk-figure tight">
+        <img src="clickcleverly-mockups/mockup-4.jpg" alt="Color-coded risk highlighting overlaid on Hinge TOS with medium, high, and low risk explanations">
+        <figcaption>Fig 4 — the same clause flagged by risk category on a real Hinge Terms of Service.</figcaption>
+      </figure>
+      <figure class="walk-figure">
+        <img src="clickcleverly-mockups/mockup-5.jpg" alt="Quick overview panel and consent quiz for Hinge TOS">
+        <figcaption>Fig 5 — a plain-language quick overview flows directly into the consent quiz.</figcaption>
+      </figure>
+
+      <div class="doc-label">Feature 3 — Personalized Preference Onboarding</div>
+      <p class="proj-desc">Not every clause matters equally to every user. A short onboarding lets people set their own thresholds so every summary after is tailored to what they actually care about.</p>
+      <figure class="walk-figure last">
+        <img src="clickcleverly-mockups/mockup-6.jpg" alt="Preference onboarding screens with yes/no questions about data collection and location tracking">
+        <figcaption>Fig 6 — a four-step onboarding for data collection and location-tracking preferences.</figcaption>
+      </figure>
+
+      <p class="walk-back bottom"><a href="clickcleverlyindex.html" class="proj-link">← Back to project</a></p>
+    </div>
+  </main>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
